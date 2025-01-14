@@ -84,7 +84,7 @@ plot_data("data/scraped_data.csv", "Price")
 ---
 
 **Contributors:**
-- Project Owner: *Your Name*
+- Project Owner: u-chow
 
 **License:** MIT License
 
