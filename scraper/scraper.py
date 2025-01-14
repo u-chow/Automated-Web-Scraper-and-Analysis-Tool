@@ -1,9 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 import random
-import time
+import pandas as pd
 
-def fetch_web_content(url):
+def fetch_custom_website(url):
     headers = {
         'User-Agent': random.choice([
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
@@ -14,7 +14,22 @@ def fetch_web_content(url):
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
-        return soup
+        data = []
+        # Detect if the website is an e-commerce site (for shoes) or news
+        if 'product' in url or 'shop' in url:
+            products = soup.find_all(['div', 'li'], class_=['product', 'item'])
+            for product in products:
+                name = product.find(['h2', 'span', 'p']).get_text(strip=True) if product.find(['h2', 'span', 'p']) else 'N/A'
+                price = product.find(['span', 'div'], class_=['price', 'amount']).get_text(strip=True) if product.find(['span', 'div'], class_=['price', 'amount']) else 'N/A'
+                data.append({'Product Name': name, 'Price': price})
+        else:
+            articles = soup.find_all('h2')
+            for article in articles:
+                title = article.get_text(strip=True)
+                link = article.find('a')['href'] if article.find('a') else url
+                data.append({'Title': title, 'Link': link})
+        df = pd.DataFrame(data)
+        df.to_csv('data/custom_scraped_data.csv', index=False)
+        print("Website data has been saved.")
     else:
-        print(f"Failed to fetch {url}, Status Code: {response.status_code}")
-        return None
+        print(f"Failed to fetch data. Status Code: {response.status_code}")
