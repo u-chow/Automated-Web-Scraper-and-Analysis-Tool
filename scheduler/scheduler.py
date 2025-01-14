@@ -1,4 +1,3 @@
-# scheduler/scheduler.py
 from apscheduler.schedulers.blocking import BlockingScheduler
 from scraper.scraper import fetch_web_content
 
