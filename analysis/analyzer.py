@@ -1,4 +1,3 @@
-# analysis/analyzer.py
 import pandas as pd
 
 def analyze_data(file_path):
