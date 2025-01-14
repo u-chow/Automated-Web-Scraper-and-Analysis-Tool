@@ -1,13 +1,10 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
-from scraper.scraper import fetch_web_content
+from scraper.scraper import fetch_custom_website
 
 scheduler = BlockingScheduler()
 
 @scheduler.scheduled_job('interval', hours=6)
 def scheduled_task():
-    url = input("Please enter the URL to scrape: ")
-    if url:
-        content = fetch_web_content(url)
-        print(f"Data has been scraped from {url}.")
-    else:
-        print("No URL entered, skipping this scraping task.")
+    url = input("Enter the website URL to scrape: ")
+    fetch_custom_website(url)
+    print("Scheduled scraping completed.")
